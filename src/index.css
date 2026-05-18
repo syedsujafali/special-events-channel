@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #fbfaf7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root,
+#root > * {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #fbfaf7;
+  overscroll-behavior-x: none;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  position: relative;
+}
+
+#root {
+  background: #fbfaf7;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "kern" 1, "liga" 1, "ss01" 1;
+  min-width: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: #ffcb7d;
+  color: #171717;
+}
+
+.shape-plus {
+  border-radius: 28%;
+  clip-path: polygon(50% 0%, 92% 25%, 100% 50%, 92% 75%, 50% 100%, 8% 75%, 0% 50%, 8% 25%);
+}
+
+.grain {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 203, 125, 0.22) 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 10%, rgba(34, 193, 195, 0.16) 0 1px, transparent 1px),
+    radial-gradient(circle at 50% 80%, rgba(255, 111, 97, 0.14) 0 1px, transparent 1px);
+  background-size: 36px 36px, 42px 42px, 52px 52px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
