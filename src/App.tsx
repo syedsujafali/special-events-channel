@@ -1140,7 +1140,7 @@ function SiteFooter() {
                 <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-pink-400 group-hover:w-[80%] group-hover:left-[10%] transition-all duration-300" />
               </a>
             ))}
-
+            
           </div>
         </div>
 
