@@ -19,6 +19,7 @@ const NAV_ITEMS: Array<{ key: PageKey; label: string; href: string }> = [
 
 const images = {
   hero: "/images/sec-hero-stage.jpg",
+  video: "/images/hero-video.mp4",
   interview: "/images/sec-interview.jpg",
   networking: "/images/sec-networking.jpg",
   gala: "/images/sec-gala.jpg",
@@ -289,25 +290,19 @@ function SiteNav({ page }: { page: PageKey }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 px-3 py-3 sm:px-5">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full border border-white/75 bg-white/70 px-4 shadow-[0_20px_80px_rgba(20,20,20,0.08)] backdrop-blur-2xl sm:px-6">
-        <a href="#/" className="group flex items-center gap-3" aria-label="Special Events Channel home">
-          <span className="relative grid h-10 w-10 place-items-center rounded-[17px] bg-[#ff6f61] transition-transform duration-300 group-hover:rotate-6">
-            <span className="shape-plus h-5 w-5 bg-white" />
-          </span>
-          <span className="hidden leading-none sm:block">
-            <span className="block text-sm font-black uppercase tracking-[0.18em]">Special Events</span>
-            <span className="block text-xs font-semibold uppercase tracking-[0.42em] text-neutral-500">Channel</span>
-          </span>
+    <header className="fixed left-0 right-0 top-0 z-50 px-3 py-2 sm:px-5">
+      <nav className="mx-auto flex h-14 w-full max-w-screen-2xl items-center justify-between rounded-full border border-white/75 bg-white/90 px-4 shadow-[0_12px_40px_rgba(20,20,20,0.08)] backdrop-blur-2xl sm:px-6">
+        <a href="#/" className="flex items-center" aria-label="Special Events Channel home">
+          <img src="/images/header-logo-transparent.png" alt="Special Events Channel logo" className="h-14 w-auto" />
         </a>
 
-        <div className="hidden items-center gap-1 rounded-full bg-neutral-100/80 p-1 lg:flex">
+        <div className="hidden flex-1 items-center justify-center gap-2 rounded-full bg-neutral-100/80 px-2 py-1 lg:flex">
           {NAV_ITEMS.map((item) => (
             <a
               key={item.key}
               href={item.href}
               className={cn(
-                "rounded-full px-4 py-2 text-sm font-semibold text-neutral-500 transition-all duration-300 hover:text-neutral-950",
+                "rounded-full px-3 py-2 text-sm font-semibold text-neutral-500 transition-all duration-300 hover:text-neutral-950",
                 page === item.key && "bg-white text-neutral-950 shadow-[0_8px_24px_rgba(20,20,20,0.08)]",
               )}
             >
@@ -317,28 +312,28 @@ function SiteNav({ page }: { page: PageKey }) {
         </div>
 
         <div className="flex items-center gap-2">
+          <a
+            href="#/contact"
+            className="hidden rounded-full bg-neutral-950 px-4 py-2 text-sm font-bold text-white transition-all duration-300 hover:bg-[#ff6f61] hover:shadow-[0_16px_34px_rgba(255,111,97,0.24)] lg:inline-flex"
+          >
+            Start a brief
+          </a>
           <button
             type="button"
             aria-label="Toggle navigation"
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((open) => !open)}
-            className="inline-flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-neutral-200 bg-white text-neutral-950 transition hover:bg-neutral-100 lg:hidden"
+            className="inline-flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-full border border-neutral-200 bg-white text-neutral-950 transition hover:bg-neutral-100 lg:hidden"
           >
             <span className="block h-0.5 w-5 rounded-full bg-current" />
             <span className="block h-0.5 w-5 rounded-full bg-current" />
             <span className="block h-0.5 w-5 rounded-full bg-current" />
           </button>
-          <a
-            href="#/contact"
-            className="hidden rounded-full bg-neutral-950 px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:bg-[#ff6f61] hover:shadow-[0_16px_34px_rgba(255,111,97,0.24)] lg:inline-flex"
-          >
-            Start a brief
-          </a>
         </div>
       </nav>
       <div
         className={cn(
-          "no-scrollbar mx-auto mt-2 max-w-7xl overflow-hidden rounded-[28px] bg-white/90 p-3 shadow-[0_16px_50px_rgba(20,20,20,0.07)] backdrop-blur-2xl lg:hidden",
+          "no-scrollbar mx-auto mt-2 w-full max-w-screen-2xl overflow-hidden rounded-[28px] bg-white/90 p-3 shadow-[0_16px_50px_rgba(20,20,20,0.07)] backdrop-blur-2xl lg:hidden",
           mobileOpen ? "block" : "hidden",
         )}
       >
@@ -383,69 +378,71 @@ function HomePage() {
 }
 
 function HeroSection() {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const element = videoRef.current;
+    if (!element) return;
+
+    const playPromise = element.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        element.muted = true;
+        element.play().catch(() => {
+          // video autoplay blocked
+        });
+      });
+    }
+  }, []);
+
   return (
     <section className="relative isolate min-h-[100svh] overflow-hidden bg-[#fff7ee] pt-28">
-      <img src={images.hero} alt="Premium event stage with audience" className="absolute inset-0 -z-20 h-full w-full object-cover" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,250,241,0.96)_0%,rgba(255,250,241,0.84)_42%,rgba(255,250,241,0.38)_100%)]" />
-      <div className="grain absolute inset-0 -z-10 opacity-45" />
-      <FloatingSymbols density="hero" />
+      <video
+        ref={videoRef}
+        src={encodeURI(images.video)}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        className="absolute inset-0 -z-20 h-full w-full object-cover"
+      >
+        <source src={encodeURI(images.video)} type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,250,241,0.28)_0%,rgba(255,250,241,0.18)_42%,rgba(255,250,241,0.08)_100%)]" />
+      <div className="grain absolute inset-0 -z-10 opacity-10" />
 
-      <div className="mx-auto grid min-h-[calc(100svh-7rem)] max-w-7xl items-center gap-12 px-5 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-        <div className="relative z-10 max-w-4xl">
+      <div className="mx-auto flex min-h-[calc(100svh-7rem)] w-full max-w-screen-xl flex-col items-center justify-center px-5 pb-14 text-center lg:px-8">
+        <div className="relative z-10">
           <motion.h1
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-5xl text-[clamp(3.2rem,8vw,6.5rem)] font-black uppercase leading-[0.78] tracking-[-0.09em] text-neutral-950"
-          >
-            Special Events Channel
-          </motion.h1>
+  initial={{ opacity: 0, y: 22 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.08, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+  className="mx-auto max-w-[14ch] text-[clamp(3.2rem,8vw,6.5rem)] font-black uppercase tracking-[0.08em] leading-[1.1] text-black drop-shadow-[0_18px_28px_rgba(0,0,0,0.7)]"
+>
+  Special Events Channel
+</motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.18, duration: 0.8 }}
-            className="mt-8 max-w-2xl text-xl leading-8 text-neutral-700 sm:text-2xl sm:leading-9"
-          >
-            An immersive editorial platform for premieres, summits, hospitality and the stories that make live culture feel cinematic.
-          </motion.p>
+  initial={{ opacity: 0, y: 24 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.18, duration: 0.8 }}
+  className="mt-8 mx-auto max-w-2xl text-lg leading-8 font-bold text-white-400 drop-shadow-[0_6px_16px_rgba(0,0,0,0.6)] sm:text-xl sm:leading-9"
+>
+  An immersive editorial platform for premieres, summits, hospitality and the stories that make live culture feel cinematic.
+</motion.p>
           <motion.div
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.28, duration: 0.8 }}
-            className="mt-10 flex flex-col gap-3 sm:flex-row"
+            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <a href="#/events" className="rounded-full bg-neutral-950 px-7 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-[#ff6f61]">
+            <a href="#/events" className="rounded-full bg-neutral-950 px-8 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-[#ff6f61]">
               Explore events
             </a>
-            <a href="#/media" className="rounded-full border border-neutral-950/15 bg-white/65 px-7 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-neutral-950 backdrop-blur-xl transition-all duration-300 hover:border-neutral-950 hover:bg-white">
+            <a href="#/media" className="rounded-full border border-neutral-950/15 bg-white/75 px-8 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-neutral-950 backdrop-blur-xl transition-all duration-300 hover:border-neutral-950 hover:bg-white">
               Watch the channel
             </a>
           </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94, rotate: 2 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ delay: 0.16, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden h-[620px] lg:block"
-          aria-hidden="true"
-        >
-          <div className="absolute right-8 top-2 h-[300px] w-[500px] rounded-[34px] bg-[#ff6f61] shadow-[0_42px_90px_rgba(255,111,97,0.2)]" />
-          <ShapeImage src={images.hero} alt="Stage lights" variant="hexagon" className="absolute right-20 top-0 h-[310px] w-[430px] shadow-[0_44px_90px_rgba(20,20,20,0.28)]" />
-
-          <div className="absolute left-12 top-[285px] h-[250px] w-[390px] rounded-[34px] bg-[#ffcb7d] shadow-[0_42px_80px_rgba(255,203,125,0.2)]" />
-          <ShapeImage src={images.interview} alt="Interview recording" variant="wave" className="absolute left-[112px] top-[325px] h-[190px] w-[260px] shadow-[0_32px_70px_rgba(20,20,20,0.18)]" />
-          <span className="shape-plus absolute left-10 top-[240px] h-16 w-16 bg-[#22c1c3]" />
-          <span className="shape-plus absolute bottom-14 left-24 h-12 w-12 bg-[#22c1c3]" />
-
-          <div className="absolute bottom-0 right-10 h-[250px] w-[360px] rounded-[34px] bg-[#8e7ef0] shadow-[0_42px_80px_rgba(142,126,240,0.22)]" />
-          <ShapeImage src={images.venue} alt="Luxury venue" variant="teardrop" className="absolute bottom-10 right-28 h-[220px] w-[300px] shadow-[0_34px_80px_rgba(20,20,20,0.16)]" />
-          <ShapeImage src={images.gala} alt="Gala hospitality" variant="squircle" className="absolute bottom-24 right-2 h-28 w-28 border-[10px] border-[#fff7ee]" />
-          <ShapeImage src={images.networking} alt="Networking guests" variant="squircle" className="absolute bottom-2 right-[330px] h-24 w-24 border-[10px] border-[#fff7ee]" />
-        </motion.div>
-        <div className="relative lg:hidden mx-auto mt-10 w-full max-w-[calc(100vw-1rem)] overflow-hidden rounded-[32px] bg-white/10 shadow-[0_20px_60px_rgba(20,20,20,0.08)] aspect-square sm:max-w-[calc(100vw-1.5rem)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,111,97,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(34,193,195,0.12),transparent_30%)]" />
-          <ShapeImage src={images.hero} alt="Stage lights" variant="rounded" className="absolute inset-0 h-full w-full" />
         </div>
       </div>
     </section>
@@ -455,7 +452,7 @@ function HeroSection() {
 function ReferenceInspiredSystem() {
   return (
     <section className="relative overflow-hidden bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto w-full max-w-screen-2xl">
         <SectionHeading
           eyebrow="Visual language"
           title="Color blocks, custom masks and editorial coverage in motion."
@@ -554,7 +551,7 @@ function EventsPreview() {
   return (
     <section className="relative overflow-hidden bg-[#f4f1eb] px-5 py-24 lg:px-8 lg:py-32">
       <FloatingSymbols density="section" />
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto w-full max-w-screen-2xl">
         <SectionHeading
           eyebrow="Events"
           title="Coverage systems for rooms with energy."
@@ -597,7 +594,7 @@ function EventTile({ event }: { event: (typeof eventSeries)[number] }) {
 function MediaPreview() {
   return (
     <section className="overflow-hidden bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto w-full max-w-screen-2xl">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <SectionHeading
             eyebrow="Media and interviews"
@@ -643,7 +640,7 @@ function GalleryPreview() {
     <section className="relative overflow-hidden bg-[#fff7ee] px-5 py-24 lg:px-8 lg:py-32">
       <div className="hidden lg:block absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-[#ffcb7d]/60 blur-3xl" />
       <div className="hidden lg:block absolute bottom-10 right-[-8rem] h-80 w-80 rounded-full bg-[#22c1c3]/40 blur-3xl" />
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto w-full max-w-screen-2xl">
         <SectionHeading
           eyebrow="Gallery"
           title="A visual archive of shaped moments."
@@ -658,7 +655,7 @@ function GalleryPreview() {
 function CtaBand() {
   return (
     <section className="relative overflow-hidden bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[44px] bg-neutral-950 text-white shadow-[0_46px_120px_rgba(20,20,20,0.18)]">
+      <div className="mx-auto max-w-[1400px] overflow-hidden rounded-[44px] bg-neutral-950 text-white shadow-[0_46px_120px_rgba(20,20,20,0.18)]">
         <div className="relative grid grid-cols-1 gap-8 p-6 sm:p-10 lg:grid-cols-[1fr_0.85fr] lg:p-16">
           <div className="absolute right-6 top-6 h-24 w-24 rounded-full bg-[#ffcb7d] sm:right-10 sm:top-10" />
           <span className="shape-plus absolute bottom-10 right-20 h-16 w-16 bg-[#8e7ef0] sm:bottom-12 sm:right-52" />
@@ -697,7 +694,7 @@ function EventsPage() {
         shape="wave"
       />
       <section className="bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1400px]">
           <SectionHeading
             eyebrow="Event architecture"
             title="Each event becomes a visual world."
@@ -711,7 +708,7 @@ function EventsPage() {
         </div>
       </section>
       <section className="overflow-hidden bg-[#f4f1eb] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div className="mx-auto grid max-w-[1400px] gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div data-reveal>
             <p className="text-xs font-black uppercase tracking-[0.34em] text-neutral-500">Event flow</p>
             <h2 className="mt-5 text-5xl font-black uppercase leading-[0.88] tracking-[-0.06em] sm:text-7xl">
@@ -754,7 +751,7 @@ function MediaPage() {
         shape="blob"
       />
       <section className="bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1400px]">
           <SectionHeading
             eyebrow="Editorial slate"
             title="Made for stories that move across every screen."
@@ -768,7 +765,7 @@ function MediaPage() {
         </div>
       </section>
       <section className="bg-[#fff7ee] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="mx-auto grid max-w-[1400px] gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="relative min-h-[620px] overflow-hidden rounded-[44px] bg-[#ff6f61]" data-reveal>
             <ShapeImage src={images.portrait} alt="Editorial speaker portrait" variant="wave" className="absolute left-10 top-12 hidden md:block h-[360px] w-[300px] border-[12px] border-neutral-950" />
             <ShapeImage src={images.audience} alt="Audience reaction" variant="squircle" className="absolute bottom-10 right-10 hidden md:block h-[300px] w-[300px] border-[14px] border-[#ff6f61]" />
@@ -801,7 +798,7 @@ function GalleryPage() {
         shape="squircle"
       />
       <section className="bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1400px]">
           <GalleryMosaic />
         </div>
       </section>
@@ -824,7 +821,7 @@ function ContactPage() {
       <section className="relative overflow-hidden overflow-x-hidden bg-[#fff7ee] px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-32 box-border">
         <div className="hidden lg:block absolute left-[-12rem] top-10 h-96 w-96 rounded-full bg-[#22c1c3]/30 blur-3xl" />
         <div className="hidden lg:block absolute bottom-0 right-[-12rem] h-96 w-96 rounded-full bg-[#ffcb7d]/50 blur-3xl" />
-        <div className="mx-auto grid w-full max-w-7xl gap-10 grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] lg:items-start min-w-0 max-w-full">
+        <div className="mx-auto grid w-full max-w-[1400px] gap-10 grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] lg:items-start min-w-0 max-w-full">
           <div data-reveal className="min-w-0 w-full">
             <p className="text-xs font-black uppercase tracking-[0.34em] text-neutral-500">Secure inquiry</p>
             <h2 className="mt-5 max-w-full break-words text-4xl font-black uppercase leading-[1] tracking-[-0.05em] sm:text-5xl lg:text-6xl">One clean form. Protected by invisible checks.</h2>
@@ -862,7 +859,7 @@ function PageHero({
       <img src={image} alt={title} className="absolute inset-0 -z-20 h-full w-full object-cover" />
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,250,241,0.98),rgba(255,250,241,0.82),rgba(255,250,241,0.42))]" />
       <FloatingSymbols density="section" />
-      <div className="mx-auto grid min-h-[calc(82svh-7rem)] max-w-7xl items-center gap-10 px-5 pb-16 lg:grid-cols-[1fr_0.85fr] lg:px-8">
+      <div className="mx-auto grid min-h-[calc(82svh-7rem)] max-w-[1400px] items-center gap-10 px-5 pb-16 lg:grid-cols-[1fr_0.85fr] lg:px-8">
         <div data-reveal>
           <p className="text-xs font-black uppercase tracking-[0.36em] text-neutral-500">{eyebrow}</p>
           <h1 className="mt-6 max-w-5xl text-[clamp(3rem,8vw,6rem)] font-black uppercase leading-[0.8] tracking-[-0.08em] text-neutral-950">{title}</h1>
@@ -928,7 +925,7 @@ function ImagePreview({ item, onClose }: { item: (typeof galleryItems)[number]; 
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.96, y: 10 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="relative h-[82vh] w-full max-w-6xl overflow-hidden rounded-[44px] shadow-[0_50px_130px_rgba(20,20,20,0.2)]"
+        className="relative h-[82vh] w-full max-w-[1400px] overflow-hidden rounded-[44px] shadow-[0_50px_130px_rgba(20,20,20,0.2)]"
         style={{ backgroundColor: item.color }}
         onClick={(event) => event.stopPropagation()}
       >
@@ -1115,21 +1112,51 @@ function FloatingSymbols({ density }: { density: "hero" | "section" }) {
 
 function SiteFooter() {
   return (
-    <footer className="bg-[#f4f1eb] px-5 py-12 lg:px-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 rounded-[34px] bg-white/70 p-6 shadow-[0_24px_80px_rgba(20,20,20,0.06)] sm:p-8 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p className="text-lg font-black uppercase tracking-[-0.03em]">Special Events Channel</p>
-          <a href="mailto:info@specialeventschannel.com" className="mt-2 block text-sm font-semibold text-neutral-500 transition hover:text-neutral-950">
+    <footer className="bg-neutral-950 text-white px-5 py-10 border-t border-white/10">
+      <div className="mx-auto max-w-[1400px] flex flex-col items-center gap-8">
+
+        {/* Floating link ring */}
+        <div className="relative w-full flex justify-center">
+          <div className="flex flex-wrap justify-center gap-3 text-sm font-medium">
+
+            {["Home", "Events", "Media", "Gallery", "Contact"].map((item, i) => (
+              <a
+                key={item}
+                href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+                className="relative px-4 py-1 rounded-full border border-white/10 overflow-hidden group"
+                style={{
+                  transform: `rotate(${i % 2 === 0 ? "1deg" : "-1deg"})`,
+                }}
+              >
+                {/* background glow */}
+                <span className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition" />
+
+                {/* sliding text effect */}
+                <span className="relative z-10 group-hover:tracking-widest transition-all duration-300">
+                  {item}
+                </span>
+
+                {/* animated underline burst */}
+                <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-pink-400 group-hover:w-[80%] group-hover:left-[10%] transition-all duration-300" />
+              </a>
+            ))}
+
+          </div>
+        </div>
+
+        {/* Email with “scanner line” effect */}
+        <a
+          href="mailto:info@specialeventschannel.com"
+          className="relative text-sm text-neutral-300 tracking-wide group"
+        >
+          <span className="relative z-10 group-hover:text-white transition">
             info@specialeventschannel.com
-          </a>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          {NAV_ITEMS.map((item) => (
-            <a key={item.key} href={item.href} className="rounded-full bg-neutral-100 px-4 py-2 text-sm font-bold text-neutral-600 transition hover:bg-neutral-950 hover:text-white">
-              {item.label}
-            </a>
-          ))}
-        </div>
+          </span>
+
+          {/* scanning highlight line */}
+          <span className="absolute left-0 top-1/2 h-[1px] w-0 bg-gradient-to-r from-transparent via-pink-500 to-transparent group-hover:w-full transition-all duration-500" />
+        </a>
+
       </div>
     </footer>
   );
