@@ -264,7 +264,7 @@ export default function App() {
           {renderPage(page)}
         </motion.main>
       </AnimatePresence>
-      <SiteFooter />
+      <SiteFooter page={page} />
       <CookieConsent />
     </div>
   );
@@ -290,8 +290,8 @@ function SiteNav({ page }: { page: PageKey }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 px-3 py-2 sm:px-5">
-      <nav className="mx-auto flex h-14 w-full max-w-screen-2xl items-center justify-between rounded-full border border-white/75 bg-white/90 px-4 shadow-[0_12px_40px_rgba(20,20,20,0.08)] backdrop-blur-2xl sm:px-6">
+    <header className="fixed left-0 right-0 top-0 z-50 px-3 py-2 sm:px-5" data-lenis-prevent>
+      <nav className="mx-auto flex h-14 w-full max-w-[1600px] items-center justify-between rounded-full border border-white/75 bg-white/90 px-4 shadow-[0_12px_40px_rgba(20,20,20,0.08)] backdrop-blur-2xl sm:px-6">
         <a href="#/" className="flex items-center" aria-label="Special Events Channel home">
           <img src="/images/header-logo-transparent.png" alt="Special Events Channel logo" className="h-14 w-auto" />
         </a>
@@ -333,7 +333,7 @@ function SiteNav({ page }: { page: PageKey }) {
       </nav>
       <div
         className={cn(
-          "no-scrollbar mx-auto mt-2 w-full max-w-screen-2xl overflow-hidden rounded-[28px] bg-white/90 p-3 shadow-[0_16px_50px_rgba(20,20,20,0.07)] backdrop-blur-2xl lg:hidden",
+          "no-scrollbar mx-auto mt-2 w-full max-w-[1600px] overflow-hidden rounded-[28px] bg-white/90 p-3 shadow-[0_16px_50px_rgba(20,20,20,0.07)] backdrop-blur-2xl lg:hidden",
           mobileOpen ? "block" : "hidden",
         )}
       >
@@ -396,50 +396,56 @@ function HeroSection() {
   }, []);
 
   return (
-    <section className="relative isolate min-h-[100svh] overflow-hidden bg-[#fff7ee] pt-28">
+    <section className="relative isolate min-h-[100svh] overflow-hidden bg-neutral-950 pt-28">
       <video
         ref={videoRef}
-        src={encodeURI(images.video)}
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
         className="absolute inset-0 -z-20 h-full w-full object-cover"
+        poster={encodeURI(images.hero)}
       >
         <source src={encodeURI(images.video)} type="video/mp4" />
       </video>
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,250,241,0.28)_0%,rgba(255,250,241,0.18)_42%,rgba(255,250,241,0.08)_100%)]" />
-      <div className="grain absolute inset-0 -z-10 opacity-10" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/70 via-black/40 to-black/60" />
+      <div className="grain absolute inset-0 -z-10 opacity-15" />
 
-      <div className="mx-auto flex min-h-[calc(100svh-7rem)] w-full max-w-screen-xl flex-col items-center justify-center px-5 pb-14 text-center lg:px-8">
+      <div className="mx-auto flex min-h-[calc(100svh-7rem)] w-full max-w-[1600px] flex-col items-center justify-center px-5 pb-14 text-center lg:px-8">
         <div className="relative z-10">
           <motion.h1
-  initial={{ opacity: 0, y: 22 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.08, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-  className="mx-auto max-w-[14ch] text-[clamp(3.2rem,8vw,6.5rem)] font-black uppercase tracking-[0.08em] leading-[1.1] text-black drop-shadow-[0_18px_28px_rgba(0,0,0,0.7)]"
->
-  Special Events Channel
-</motion.h1>
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto max-w-[14ch] text-[clamp(3.2rem,8vw,6.5rem)] font-black uppercase tracking-[0.08em] leading-[1.1] text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.3)]"
+          >
+            Special Events Channel
+          </motion.h1>
           <motion.p
-  initial={{ opacity: 0, y: 24 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.18, duration: 0.8 }}
-  className="mt-8 mx-auto max-w-2xl text-lg leading-8 font-bold text-white-400 drop-shadow-[0_6px_16px_rgba(0,0,0,0.6)] sm:text-xl sm:leading-9"
->
-  An immersive editorial platform for premieres, summits, hospitality and the stories that make live culture feel cinematic.
-</motion.p>
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18, duration: 0.8 }}
+            className="mt-8 mx-auto max-w-2xl text-lg leading-8 font-bold text-neutral-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] sm:text-xl sm:leading-9"
+          >
+            An immersive editorial platform for premieres, summits, hospitality and the stories that make live culture feel cinematic.
+          </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.28, duration: 0.8 }}
             className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <a href="#/events" className="rounded-full bg-neutral-950 px-8 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-[#ff6f61]">
+            <a
+              href="#/events"
+              className="rounded-full bg-[#ff6f61] px-8 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-white hover:text-neutral-950"
+            >
               Explore events
             </a>
-            <a href="#/media" className="rounded-full border border-neutral-950/15 bg-white/75 px-8 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-neutral-950 backdrop-blur-xl transition-all duration-300 hover:border-neutral-950 hover:bg-white">
+            <a
+              href="#/media"
+              className="rounded-full border border-white/20 bg-white/10 px-8 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-neutral-950"
+            >
               Watch the channel
             </a>
           </motion.div>
@@ -452,7 +458,7 @@ function HeroSection() {
 function ReferenceInspiredSystem() {
   return (
     <section className="relative overflow-hidden bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-      <div className="mx-auto w-full max-w-screen-2xl">
+      <div className="mx-auto w-full max-w-[1600px]">
         <SectionHeading
           eyebrow="Visual language"
           title="Color blocks, custom masks and editorial coverage in motion."
@@ -551,7 +557,7 @@ function EventsPreview() {
   return (
     <section className="relative overflow-hidden bg-[#f4f1eb] px-5 py-24 lg:px-8 lg:py-32">
       <FloatingSymbols density="section" />
-      <div className="mx-auto w-full max-w-screen-2xl">
+      <div className="mx-auto w-full max-w-[1600px]">
         <SectionHeading
           eyebrow="Events"
           title="Coverage systems for rooms with energy."
@@ -594,7 +600,7 @@ function EventTile({ event }: { event: (typeof eventSeries)[number] }) {
 function MediaPreview() {
   return (
     <section className="overflow-hidden bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-      <div className="mx-auto w-full max-w-screen-2xl">
+      <div className="mx-auto w-full max-w-[1600px]">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <SectionHeading
             eyebrow="Media and interviews"
@@ -640,7 +646,7 @@ function GalleryPreview() {
     <section className="relative overflow-hidden bg-[#fff7ee] px-5 py-24 lg:px-8 lg:py-32">
       <div className="hidden lg:block absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-[#ffcb7d]/60 blur-3xl" />
       <div className="hidden lg:block absolute bottom-10 right-[-8rem] h-80 w-80 rounded-full bg-[#22c1c3]/40 blur-3xl" />
-      <div className="mx-auto w-full max-w-screen-2xl">
+      <div className="mx-auto w-full max-w-[1600px]">
         <SectionHeading
           eyebrow="Gallery"
           title="A visual archive of shaped moments."
@@ -655,7 +661,7 @@ function GalleryPreview() {
 function CtaBand() {
   return (
     <section className="relative overflow-hidden bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-      <div className="mx-auto max-w-[1400px] overflow-hidden rounded-[44px] bg-neutral-950 text-white shadow-[0_46px_120px_rgba(20,20,20,0.18)]">
+      <div className="mx-auto max-w-[1600px] overflow-hidden rounded-[44px] bg-neutral-950 text-white shadow-[0_46px_120px_rgba(20,20,20,0.18)]">
         <div className="relative grid grid-cols-1 gap-8 p-6 sm:p-10 lg:grid-cols-[1fr_0.85fr] lg:p-16">
           <div className="absolute right-6 top-6 h-24 w-24 rounded-full bg-[#ffcb7d] sm:right-10 sm:top-10" />
           <span className="shape-plus absolute bottom-10 right-20 h-16 w-16 bg-[#8e7ef0] sm:bottom-12 sm:right-52" />
@@ -694,7 +700,7 @@ function EventsPage() {
         shape="wave"
       />
       <section className="bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-[1400px]">
+        <div className="mx-auto max-w-[1600px]">
           <SectionHeading
             eyebrow="Event architecture"
             title="Each event becomes a visual world."
@@ -708,7 +714,7 @@ function EventsPage() {
         </div>
       </section>
       <section className="overflow-hidden bg-[#f4f1eb] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto grid max-w-[1400px] gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div className="mx-auto grid max-w-[1600px] gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div data-reveal>
             <p className="text-xs font-black uppercase tracking-[0.34em] text-neutral-500">Event flow</p>
             <h2 className="mt-5 text-5xl font-black uppercase leading-[0.88] tracking-[-0.06em] sm:text-7xl">
@@ -751,7 +757,7 @@ function MediaPage() {
         shape="blob"
       />
       <section className="bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-[1400px]">
+        <div className="mx-auto max-w-[1600px]">
           <SectionHeading
             eyebrow="Editorial slate"
             title="Made for stories that move across every screen."
@@ -765,7 +771,7 @@ function MediaPage() {
         </div>
       </section>
       <section className="bg-[#fff7ee] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto grid max-w-[1400px] gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="relative min-h-[620px] overflow-hidden rounded-[44px] bg-[#ff6f61]" data-reveal>
             <ShapeImage src={images.portrait} alt="Editorial speaker portrait" variant="wave" className="absolute left-10 top-12 hidden md:block h-[360px] w-[300px] border-[12px] border-neutral-950" />
             <ShapeImage src={images.audience} alt="Audience reaction" variant="squircle" className="absolute bottom-10 right-10 hidden md:block h-[300px] w-[300px] border-[14px] border-[#ff6f61]" />
@@ -798,7 +804,7 @@ function GalleryPage() {
         shape="squircle"
       />
       <section className="bg-[#fbfaf7] px-5 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-[1400px]">
+        <div className="mx-auto max-w-[1600px]">
           <GalleryMosaic />
         </div>
       </section>
@@ -821,7 +827,7 @@ function ContactPage() {
       <section className="relative overflow-hidden overflow-x-hidden bg-[#fff7ee] px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-32 box-border">
         <div className="hidden lg:block absolute left-[-12rem] top-10 h-96 w-96 rounded-full bg-[#22c1c3]/30 blur-3xl" />
         <div className="hidden lg:block absolute bottom-0 right-[-12rem] h-96 w-96 rounded-full bg-[#ffcb7d]/50 blur-3xl" />
-        <div className="mx-auto grid w-full max-w-[1400px] gap-10 grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] lg:items-start min-w-0 max-w-full">
+        <div className="mx-auto grid w-full max-w-[1600px] gap-10 grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] lg:items-start min-w-0 max-w-full">
           <div data-reveal className="min-w-0 w-full">
             <p className="text-xs font-black uppercase tracking-[0.34em] text-neutral-500">Secure inquiry</p>
             <h2 className="mt-5 max-w-full break-words text-4xl font-black uppercase leading-[1] tracking-[-0.05em] sm:text-5xl lg:text-6xl">One clean form. Protected by invisible checks.</h2>
@@ -859,7 +865,7 @@ function PageHero({
       <img src={image} alt={title} className="absolute inset-0 -z-20 h-full w-full object-cover" />
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,250,241,0.98),rgba(255,250,241,0.82),rgba(255,250,241,0.42))]" />
       <FloatingSymbols density="section" />
-      <div className="mx-auto grid min-h-[calc(82svh-7rem)] max-w-[1400px] items-center gap-10 px-5 pb-16 lg:grid-cols-[1fr_0.85fr] lg:px-8">
+      <div className="mx-auto grid min-h-[calc(82svh-7rem)] max-w-[1600px] items-center gap-10 px-5 pb-16 lg:grid-cols-[1fr_0.85fr] lg:px-8">
         <div data-reveal>
           <p className="text-xs font-black uppercase tracking-[0.36em] text-neutral-500">{eyebrow}</p>
           <h1 className="mt-6 max-w-5xl text-[clamp(3rem,8vw,6rem)] font-black uppercase leading-[0.8] tracking-[-0.08em] text-neutral-950">{title}</h1>
@@ -925,7 +931,7 @@ function ImagePreview({ item, onClose }: { item: (typeof galleryItems)[number]; 
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.96, y: 10 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="relative h-[82vh] w-full max-w-[1400px] overflow-hidden rounded-[44px] shadow-[0_50px_130px_rgba(20,20,20,0.2)]"
+        className="relative h-[82vh] w-full max-w-[1600px] overflow-hidden rounded-[44px] shadow-[0_50px_130px_rgba(20,20,20,0.2)]"
         style={{ backgroundColor: item.color }}
         onClick={(event) => event.stopPropagation()}
       >
@@ -1110,52 +1116,171 @@ function FloatingSymbols({ density }: { density: "hero" | "section" }) {
   );
 }
 
-function SiteFooter() {
+function SiteFooter({ page }: { page: PageKey }) {
   return (
-    <footer className="bg-neutral-950 text-white px-5 py-10 border-t border-white/10">
-      <div className="mx-auto max-w-[1400px] flex flex-col items-center gap-8">
+    <footer className="bg-[#ececec] px-5 pt-16 pb-6">
+      <div className="mx-auto max-w-[1600px]">
 
-        {/* Floating link ring */}
-        <div className="relative w-full flex justify-center">
-          <div className="flex flex-wrap justify-center gap-3 text-sm font-medium">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.3fr_0.9fr_1fr_1.1fr] gap-6 items-stretch">
 
-            {["Home", "Events", "Media", "Gallery", "Contact"].map((item, i) => (
-              <a
-                key={item}
-                href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
-                className="relative px-4 py-1 rounded-full border border-white/10 overflow-hidden group"
-                style={{
-                  transform: `rotate(${i % 2 === 0 ? "1deg" : "-1deg"})`,
-                }}
-              >
-                {/* background glow */}
-                <span className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition" />
+          {/* Brand Info (Transparent) */}
+          <div className="flex flex-col py-6 pr-4">
+            <div>
+              <div className="flex items-center gap-3.5">
+                <img
+                  src="/images/header-logo-transparent.png"
+                  alt="Special Events Channel logo"
+                  className="h-14 w-auto object-contain"
+                />
+                <div>
+                  <span className="block text-lg font-black uppercase tracking-[0.14em] text-neutral-950 leading-none">
+                    Special Events
+                  </span>
+                  <span className="block text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mt-1">
+                    Channel
+                  </span>
+                </div>
+              </div>
 
-                {/* sliding text effect */}
-                <span className="relative z-10 group-hover:tracking-widest transition-all duration-300">
-                  {item}
-                </span>
-
-                {/* animated underline burst */}
-                <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-pink-400 group-hover:w-[80%] group-hover:left-[10%] transition-all duration-300" />
-              </a>
-            ))}
-            
+              <p className="max-w-[320px] text-base leading-7 text-neutral-600 font-medium mt-8">
+                Crafting immersive event stories and premium digital archives with elegance,
+                creativity, and cinematic art direction.
+              </p>
+            </div>
           </div>
+
+          {/* Navigation Card */}
+          <div className="bg-[#fcfbf9] rounded-[34px] p-8 border border-black/5 shadow-sm flex flex-col justify-between min-h-[380px]">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ff6f61]" />
+                <span className="uppercase tracking-[4px] text-[11px] text-neutral-500 font-black">
+                  Navigation
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-4.5">
+                {NAV_ITEMS.map((item) => (
+                  <a
+                    key={item.key}
+                    href={item.href}
+                    className={cn(
+                      "uppercase text-[18px] tracking-[1.5px] font-black transition-all duration-300 relative inline-block w-fit group",
+                      page === item.key
+                        ? "text-neutral-950"
+                        : "text-neutral-400 hover:text-neutral-950"
+                    )}
+                  >
+                    {item.label}
+                    <span
+                      className={cn(
+                        "absolute -bottom-0.5 left-0 h-0.5 bg-[#ff6f61] transition-all duration-300",
+                        page === item.key ? "w-full" : "w-0 group-hover:w-full"
+                      )}
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Newsletter Card */}
+          <div className="bg-[#fcfbf9] rounded-[34px] p-8 border border-black/5 shadow-sm flex flex-col justify-between min-h-[380px]">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#8e7ef0]" />
+                <span className="uppercase tracking-[4px] text-[11px] text-neutral-500 font-black">
+                  Newsletter
+                </span>
+              </div>
+              
+              <h4 className="text-lg font-black uppercase tracking-tight text-neutral-950 leading-tight">
+                Subscribe to the editorial feed
+              </h4>
+              <p className="text-xs text-neutral-500 leading-relaxed mt-2.5">
+                Get weekly production notes, cinematic previews, and event diaries.
+              </p>
+            </div>
+
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert("Thank you for subscribing!");
+                (e.target as HTMLFormElement).reset();
+              }}
+              className="mt-6 flex flex-col gap-3.5"
+            >
+              <input
+                required
+                type="email"
+                placeholder="name@email.com"
+                className="w-full rounded-full border border-neutral-200 bg-white px-4 py-3 text-xs text-neutral-950 outline-none transition focus:border-neutral-950"
+              />
+              <button
+                type="submit"
+                className="w-full rounded-full bg-neutral-950 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.2em] text-white transition hover:bg-[#ff6f61]"
+              >
+                Join the list
+              </button>
+            </form>
+          </div>
+
+          {/* Connect Card */}
+          <div className="bg-neutral-950 rounded-[34px] p-8 border border-white/5 shadow-md text-white flex flex-col justify-between min-h-[380px]">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#22c1c3]" />
+                <span className="uppercase tracking-[4px] text-[11px] text-neutral-400 font-black">
+                  Connect
+                </span>
+              </div>
+
+              <a
+                href="mailto:info@specialeventschannel.com"
+                className="inline-block text-white text-[16px] font-bold tracking-wide hover:text-[#22c1c3] transition duration-300 break-all"
+              >
+                info@specialeventschannel.com
+              </a>
+            </div>
+
+            <a
+              href="#/contact"
+              className="w-full bg-[#1b1b1b] rounded-full p-2 pl-3 flex items-center justify-between hover:bg-[#ff6f61] group transition-all duration-300 shadow-inner mt-6"
+            >
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black text-lg transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </div>
+
+              <span className="uppercase text-white tracking-[2.5px] text-[11px] font-black pr-4">
+                Brief the channel
+              </span>
+            </a>
+          </div>
+
         </div>
 
-        {/* Email with “scanner line” effect */}
-        <a
-          href="mailto:info@specialeventschannel.com"
-          className="relative text-sm text-neutral-300 tracking-wide group"
-        >
-          <span className="relative z-10 group-hover:text-white transition">
-            info@specialeventschannel.com
-          </span>
+        {/* Bottom Bar */}
+        <div className="mt-5 bg-[#fcfbf9] rounded-[28px] px-8 py-6 border border-black/5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-5">
+          <p className="uppercase tracking-[3px] text-[11px] text-neutral-500 font-bold">
+            © 2026 Special Events Channel. All rights reserved.
+          </p>
 
-          {/* scanning highlight line */}
-          <span className="absolute left-0 top-1/2 h-[1px] w-0 bg-gradient-to-r from-transparent via-pink-500 to-transparent group-hover:w-full transition-all duration-500" />
-        </a>
+          <div className="flex items-center gap-8">
+            <a
+              href="#/privacy"
+              className="uppercase tracking-[2px] text-[11px] text-neutral-500 font-bold hover:text-[#ff6f61] transition"
+            >
+              Privacy Policy
+            </a>
+
+            <a
+              href="#/terms"
+              className="uppercase tracking-[2px] text-[11px] text-neutral-500 font-bold hover:text-[#ff6f61] transition"
+            >
+              Terms of Service
+            </a>
+          </div>
+        </div>
 
       </div>
     </footer>
